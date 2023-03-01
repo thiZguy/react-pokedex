@@ -1,20 +1,16 @@
-import logo from './assets/logo.png';
 import './App.css';
-import GridList from './components/GridList';
-
-const POKEMON_IMAGES = [{img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/61.png', id: '61'},
-{img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/62.png', id: '62'}]
+import { useEffect, useState } from 'react';
+import PokemonTable from './components/PokemonTable';
 
 const App = () => {
+
+  const getDetails = (pokemonId) => {
+    console.log('pokemon clicked: ', pokemonId)
+  }
+  
   return (
     <div className="app">
-      <header className="app-header">
-        <img src={logo} className="app-logo" alt="logo" />
-        <p style={{"fontFamily": "roboto"}}>
-          This is our app with the logo and UI library ready
-        </p>
-      </header>
-      <GridList data={POKEMON_IMAGES}></GridList>
+      <PokemonTable onPokemonClicked={(pokemonId) => getDetails(pokemonId)}/>
     </div>
   );
 }

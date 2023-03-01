@@ -13,5 +13,5 @@
 	3. Added Roboto font that matches the UI library and removed unnecesary boilerplate in the css files
 	4. Used MUI's ImageList compoment to render the pokemons in a tile based manner
 
-### DISCLAIMER
+## DISCLAIMER
 This is a experimental application done on my own for study purposes. Trademarks and copyrights for third-party the Pokemon games and characters are owned by NINTENDO.
