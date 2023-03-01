@@ -1,56 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from '@mui/material';
 import axios from 'axios';
-
-const POKEMON_IMAGE_API = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-
-
-const originalRows = [
-	{ name: 'Bulbasaur', id: 1 },
-	{ name: 'Ivysaur', id: 2 },
-	{ name: 'Venosaur', id: 3 },
-];
+import { POKEMON_DEFAULT_API, POKEMON_IMAGE_API } from '../constants';
 
 const PokemonTable = (props) => {
-  const [rows, setRows] = useState(originalRows);
   const [searched, setSearched] = useState('');
-
 	const [pokeData,setPokeData]=useState([]);
-	const [loading,setLoading]=useState(true);
-	const [url,setUrl]=useState("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=151")
+	const [url,setUrl]=useState(`${POKEMON_DEFAULT_API}?offset=0&limit=151`)
 	const [nextUrl,setNextUrl]=useState();
 	const [prevUrl,setPrevUrl]=useState();
 
+	let auxPokeData=[]
+
   const pokeFun = async() => {
-      setLoading(true)
       const res = await axios.get(url);
       setNextUrl(res.data.next);
       setPrevUrl(res.data.previous);
 			const pokeDataWithIDs = res.data.results.map((result, i) => ({...result, id: result.url.split('/')[result.url.split('/').length-2]}));
-			console.log('pokeData: ', pokeDataWithIDs);
 			setPokeData(pokeDataWithIDs);
-      setLoading(false)
   }
 
 
   const requestSearch = (searchedVal) => {
-    const filteredRows = originalRows.filter((row) => {
-      return row.name.toLowerCase().includes(searchedVal.toLowerCase());
-    });
-    setRows(filteredRows);
-		setSearched(searchedVal);
+		if(searchedVal!=='') {
+			auxPokeData=pokeData;
+			const filteredRows = pokeData.filter((row) => {
+				return row.name.toLowerCase().includes(searchedVal.toLowerCase());
+			});
+			setPokeData(filteredRows);
+			setSearched(searchedVal);
+		} else {
+			pokeFun();
+			setSearched(searchedVal);
+		}
   };
 
   const cancelSearch = () => {
     setSearched('');
-    requestSearch(searched);
+		setPokeData(auxPokeData);
   };
 
 	useEffect(()=>{
@@ -72,7 +59,8 @@ const PokemonTable = (props) => {
         <TextField
           value={searched}
           onChange={(e) => requestSearch(e.target.value)}
-					onEmptied={() => cancelSearch()}
+					onAbortCapture={() => cancelSearch()}
+					label="Buscar pokemon"
         />
         <TableContainer component={Paper} style={{ maxHeight: 700, minWidth: 300 }}>
           <Table stickyHeader className="table-pokemon" aria-label="simple table">
