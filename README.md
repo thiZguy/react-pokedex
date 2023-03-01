@@ -1,7 +1,7 @@
 # React-Pokedex
 
 ... WORK IN PROGRESS
-
+https://imgur.com/a/SuYsebG
 ## Commits:
 
 ### Why origin/main:
